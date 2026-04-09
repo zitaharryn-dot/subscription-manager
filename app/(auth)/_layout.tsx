@@ -1,13 +1,6 @@
 import { Stack } from "expo-router";
 import "@/global.css";
-import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
-import { styled } from "nativewind";
-const SafeAreaView = styled(RNSafeAreaView);
 
 export default function AuthLayout() {
-  return (
-    <SafeAreaView>
-      <Stack />
-    </SafeAreaView>
-  );
+  return <Stack />;
 }
