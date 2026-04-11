@@ -12,8 +12,8 @@ const TermsOfService = () => {
         </Text>
 
         <Text className="text-base font-sans-medium text-muted-foreground mb-4">
-          These Terms of Service govern your use of Subscription Manager. By
-          accessing or using the app, you agree to these terms.
+          These Terms of Service govern your use of Subly. By accessing or using
+          the app, you agree to these terms.
         </Text>
 
         <View className="mb-5">

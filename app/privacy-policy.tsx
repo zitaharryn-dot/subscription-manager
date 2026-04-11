@@ -12,9 +12,9 @@ const PrivacyPolicy = () => {
         </Text>
 
         <Text className="text-base font-sans-medium text-muted-foreground mb-4">
-          Subscription Manager takes your privacy seriously. This Privacy Policy
-          explains what information we collect, how it is used, and the choices
-          you have when using the app.
+          Subly takes your privacy seriously. This Privacy Policy explains what
+          information we collect, how it is used, and the choices you have when
+          using the app.
         </Text>
 
         <View className="mb-5">
