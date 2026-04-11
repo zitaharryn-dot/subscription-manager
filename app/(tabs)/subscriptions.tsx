@@ -1,5 +1,5 @@
 import SubscriptionCard from "@/components/subscription-card";
-import { HOME_SUBSCRIPTIONS } from "@/constants/data";
+import { useSubscriptions } from "@/lib/subscription-context";
 import { styled } from "nativewind";
 import { useMemo, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
@@ -12,14 +12,15 @@ const Subscriptions = () => {
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<
     string | null
   >(null);
+  const { subscriptions } = useSubscriptions();
 
   const filteredSubscriptions = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) {
-      return HOME_SUBSCRIPTIONS;
+      return subscriptions;
     }
 
-    return HOME_SUBSCRIPTIONS.filter((subscription) => {
+    return subscriptions.filter((subscription) => {
       const candidateFields = [
         subscription.name,
         subscription.plan,
