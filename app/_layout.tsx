@@ -1,10 +1,12 @@
 import "@/global.css";
 import { SubscriptionProvider } from "@/lib/subscription-context";
+import { posthog } from "@/lib/posthog";
 import { ClerkProvider } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
+import { SplashScreen, Stack, usePathname, useGlobalSearchParams } from "expo-router";
+import { useEffect, useRef } from "react";
+import { PostHogProvider } from "posthog-react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,6 +26,22 @@ export default function RootLayout() {
     "sans-light": require("../assets/fonts/PlusJakartaSans-Light.ttf"),
   });
 
+  const pathname = usePathname();
+  const params = useGlobalSearchParams();
+  const previousPathname = useRef<string | undefined>(undefined);
+
+  // Manual screen tracking for Expo Router
+  // @see https://posthog.com/docs/libraries/react-native
+  useEffect(() => {
+    if (previousPathname.current !== pathname) {
+      posthog.screen(pathname, {
+        previous_screen: previousPathname.current ?? null,
+        ...params,
+      });
+      previousPathname.current = pathname;
+    }
+  }, [pathname, params]);
+
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
@@ -34,9 +52,19 @@ export default function RootLayout() {
 
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <SubscriptionProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-      </SubscriptionProvider>
+      <PostHogProvider
+        client={posthog}
+        autocapture={{
+          captureScreens: false,
+          captureTouches: true,
+          propsToCapture: ["testID"],
+          maxElementsCaptured: 20,
+        }}
+      >
+        <SubscriptionProvider>
+          <Stack screenOptions={{ headerShown: false }} />
+        </SubscriptionProvider>
+      </PostHogProvider>
     </ClerkProvider>
   );
 }
