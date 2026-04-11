@@ -1,50 +1,75 @@
-# Welcome to your Expo app 👋
+# Subly
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native subscription tracker built with Expo and Expo Router.
 
-## Get started
+This app helps users manage recurring services by tracking upcoming renewals, subscription balances, and detailed billing information.
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- User authentication using Clerk
+- Home dashboard with current subscription balance
+- Upcoming renewals carousel
+- Full subscription list with expandable details
+- Add new subscriptions via modal form
+- Analytics events captured with PostHog
+- Styled using NativeWind and Expo components
 
-2. Start the app
+## Getting started
 
-   ```bash
-   npx expo start
-   ```
+### Prerequisites
 
-In the output, you'll find options to open the app in a
+- Node.js
+- pnpm
+- Expo CLI (`npm install -g expo-cli` or `pnpm add -g expo-cli`)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Install dependencies
 
 ```bash
-npm run reset-project
+pnpm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Run locally
 
-## Learn more
+```bash
+pnpm start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+Then choose one of the available Expo targets:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- Android emulator
+- iOS simulator
+- Expo Go
+- Web
 
-## Join the community
+### Useful scripts
 
-Join our community of developers creating universal apps.
+- `pnpm start` — Start the Expo development server
+- `pnpm android` — Launch on Android
+- `pnpm ios` — Launch on iOS
+- `pnpm web` — Run the web version
+- `pnpm lint` — Run ESLint checks
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## App structure
+
+- `app/` — App routes and screen entry points
+- `components/` — Reusable UI components
+- `constants/` — Static data, icons, and images
+- `lib/` — App utilities, context, and analytics setup
+- `global.css` — Global styling with NativeWind and Tailwind configuration
+
+## Technology stack
+
+- Expo
+- Expo Router
+- React Native
+- TypeScript
+- Clerk for authentication
+- PostHog for event tracking
+- NativeWind for styling
+- Day.js for date formatting
+
+## Notes
+
+The app is designed as a subscription management experience with a mobile-first interface. New subscriptions are added through a modal and details can be expanded inline for quick access.
+
+If you want to extend this app, consider adding persistent storage for subscriptions or multi-user data sync.

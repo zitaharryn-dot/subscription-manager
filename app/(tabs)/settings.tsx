@@ -1,5 +1,6 @@
 import images from "@/constants/images";
 import { useClerk, useUser } from "@clerk/expo";
+import { useRouter } from "expo-router";
 import { styled } from "nativewind";
 import { usePostHog } from "posthog-react-native";
 import { Image, Pressable, Text, View } from "react-native";
@@ -10,6 +11,7 @@ const Settings = () => {
   const { signOut } = useClerk();
   const { user } = useUser();
   const posthog = usePostHog();
+  const router = useRouter();
 
   const handleSignOut = async () => {
     posthog.capture("user_signed_out");
@@ -78,6 +80,31 @@ const Settings = () => {
                 : "N/A"}
             </Text>
           </View>
+        </View>
+      </View>
+
+      {/* Legal Links */}
+      <View className="auth-card mb-5">
+        <Text className="text-base font-sans-semibold text-primary mb-3">
+          Legal
+        </Text>
+        <View className="gap-3">
+          <Pressable
+            className="auth-button bg-surface"
+            onPress={() => router.push({ pathname: "/privacy-policy" })}
+          >
+            <Text className="auth-button-text text-primary">
+              Privacy Policy
+            </Text>
+          </Pressable>
+          <Pressable
+            className="auth-button bg-surface"
+            onPress={() => router.push({ pathname: "/terms-of-service" })}
+          >
+            <Text className="auth-button-text text-primary">
+              Terms of Service
+            </Text>
+          </Pressable>
         </View>
       </View>
 
