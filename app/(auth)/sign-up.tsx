@@ -1,5 +1,6 @@
 import { useAuth, useSignUp } from "@clerk/expo";
 import { type Href, Link, Redirect, useRouter } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import React from "react";
 import {
   ActivityIndicator,
@@ -19,6 +20,7 @@ export default function SignUp() {
   const { isLoaded, isSignedIn } = useAuth();
   const { signUp, errors, fetchStatus } = useSignUp();
   const router = useRouter();
+  const posthog = usePostHog();
 
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -109,6 +111,14 @@ export default function SignUp() {
             console.log(session.currentTask);
             return;
           }
+
+          posthog.identify(emailAddress.trim(), {
+            $set: { email: emailAddress.trim() },
+            $set_once: { signup_date: new Date().toISOString() },
+          });
+          posthog.capture("user_signed_up", {
+            email: emailAddress.trim(),
+          });
 
           const url = decorateUrl("/(tabs)");
           if (url.startsWith("http")) {

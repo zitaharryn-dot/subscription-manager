@@ -1,5 +1,6 @@
 import { useAuth, useSignIn } from "@clerk/expo";
 import { type Href, Link, Redirect, useRouter } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import React from "react";
 import {
   ActivityIndicator,
@@ -17,6 +18,7 @@ export default function SignIn() {
   const { isLoaded, isSignedIn } = useAuth();
   const { signIn, errors, fetchStatus } = useSignIn();
   const router = useRouter();
+  const posthog = usePostHog();
 
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -70,6 +72,14 @@ export default function SignIn() {
             return;
           }
 
+          posthog.identify(emailAddress.trim(), {
+            $set: { email: emailAddress.trim() },
+          });
+          posthog.capture("user_signed_in", {
+            email: emailAddress.trim(),
+            method: "password",
+          });
+
           const url = decorateUrl("/(tabs)");
           if (url.startsWith("http")) {
             window.location.href = url;
@@ -105,6 +115,14 @@ export default function SignIn() {
             console.log(session.currentTask);
             return;
           }
+
+          posthog.identify(emailAddress.trim(), {
+            $set: { email: emailAddress.trim() },
+          });
+          posthog.capture("user_signed_in", {
+            email: emailAddress.trim(),
+            method: "mfa_email",
+          });
 
           const url = decorateUrl("/(tabs)");
           if (url.startsWith("http")) {

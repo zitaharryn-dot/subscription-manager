@@ -1,18 +1,21 @@
 import SubscriptionCard from "@/components/subscription-card";
 import { useSubscriptions } from "@/lib/subscription-context";
 import { styled } from "nativewind";
-import { useMemo, useState } from "react";
+import { usePostHog } from "posthog-react-native";
+import { useMemo, useRef, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
 const Subscriptions = () => {
+  const posthog = usePostHog();
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<
     string | null
   >(null);
   const { subscriptions } = useSubscriptions();
+  const searchDebounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const filteredSubscriptions = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -32,7 +35,7 @@ const Subscriptions = () => {
         field?.toLowerCase().includes(query),
       );
     });
-  }, [searchQuery]);
+  }, [searchQuery, subscriptions]);
 
   return (
     <SafeAreaView className="flex-1 bg-background p-5">
@@ -47,7 +50,19 @@ const Subscriptions = () => {
 
       <TextInput
         value={searchQuery}
-        onChangeText={setSearchQuery}
+        onChangeText={(text) => {
+          setSearchQuery(text);
+          if (searchDebounceTimer.current) {
+            clearTimeout(searchDebounceTimer.current);
+          }
+          if (text.trim().length > 0) {
+            searchDebounceTimer.current = setTimeout(() => {
+              posthog.capture("subscription_searched", {
+                query_length: text.trim().length,
+              });
+            }, 800);
+          }
+        }}
         placeholder="Search subscriptions"
         placeholderTextColor="#8a8a8f"
         className="mb-5 rounded-3xl border border-black/10 bg-card px-4 py-4 text-base font-sans-regular text-primary"
